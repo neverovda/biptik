@@ -1,9 +1,9 @@
 module SequenceGenerator
   class << self
-    def get_str_by_index(iterations)
-      s = '1'
-      iterations.times { s = generate(s) }
-      s
+    def get(iterations)
+      seq = ['1']
+      iterations.times { |i| seq[i + 1] = generate(seq[i]) }
+      seq
     end
 
     private

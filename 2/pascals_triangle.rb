@@ -1,9 +1,9 @@
 module TriangleGenerator
   class << self
-    def get_str_by_index(index)
-      a = [1]
-      index.times { a = generate(a) }
-      a.join(' ')
+    def get(iterations)
+      triangl = [[1]]
+      iterations.times { |i| triangl[i + 1] = generate(triangl[i].clone) }
+      triangl.map { |s| s.join(' ') }
     end
 
     private
