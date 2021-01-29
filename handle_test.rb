@@ -33,9 +33,31 @@ puts '---< 5 >---'
 end
 
 puts '---< 6 >---'
-dominos = [[1, 4], [4, 5], [5, 5], [5, 3], [3, 2], [2, 1], [1, 7], [7, 2],
-           [2, 3], [3, 6], [6, 5], [5, 1], [1, 8], [8, 3], [3, 1], [1, 2], 
-           [1, 2]].map(&:shuffle).shuffle
-p dominos
+
+classical_dominos = []
+(0..6).each do |left|
+  (0..6).each { |right| classical_dominos << [left, right] }
+end
+classical_dominos.map! {|e| e.sort }.uniq!.shuffle!
+
+puts 'classic domino:'
+p classical_dominos
 puts 'after ordering:'
-p DominoBox.new(*dominos).chain
+p DominoBox.new(*classical_dominos).chain
+
+puts "\n-----------\n"
+
+puts '2 classic domino:'
+dominos2x = classical_dominos + classical_dominos
+p dominos2x
+puts 'after ordering:'
+p DominoBox.new(*dominos2x).chain
+
+puts "\n-----------\n"
+
+puts 'classic domino withoun one member [3, 5]:'
+classical_dominos.delete [3, 5]
+
+p dominos2x
+puts 'after ordering:'
+p DominoBox.new(*classical_dominos).chain

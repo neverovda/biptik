@@ -7,13 +7,13 @@ class DominoBox
       @right = right
     end
 
-    def double?
-      left == right
-    end
-
     def rotate
       @left, @right = @right, @left
       self
+    end
+
+    def to_a
+      [left, right]
     end
   end
 end
