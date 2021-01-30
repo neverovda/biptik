@@ -9,7 +9,8 @@ class DominoBox
   def chain
     return if dominos.empty?
 
-    find_cycles
+    @cycle_chain << @dominos.shift
+    find_all_cycles(@cycle_chain.last) unless @dominos.empty?
     return unless dominos.empty?
 
     cycle_chain.map(&:to_a)
@@ -19,42 +20,35 @@ class DominoBox
 
   attr_accessor :dominos, :cycle_chain
 
-  def find_cycles
-    @cycle_chain << @dominos.shift
-    loop do
-      last = next_domino(cycle_chain.last, cycle_chain)
-      break unless last
+  def find_all_cycles(position)
+    sequence = make_sequence(position)
+    return unless cycle?(position, sequence)
 
-      @cycle_chain << last
-    end
-    return if cycle_chain.first.left != cycle_chain.last.right
+    @cycle_chain.insert(cycle_chain.index(position) + 1, *sequence)
+    @dominos -= sequence
 
-    self.dominos -= cycle_chain
-
-    cycle_chain.each do |d|
-      find_all_sub_cycles(d)
-    end
+    cycle_chain.each { |d| find_all_cycles(d) unless @dominos.empty? }
   end
 
-  def find_all_sub_cycles(position)
-    return if @dominos.empty?
-
-    cycle = []
-    last = next_domino(position, cycle)
+  def make_sequence(position)
+    sequence = []
+    last = next_domino(position, sequence)
     loop do
       break unless last
 
-      cycle << last
-      last = next_domino(cycle.last, cycle)
+      sequence << last
+      last = next_domino(sequence.last, sequence)
     end
-    return if cycle.empty? || position.right != cycle.last.right
+    sequence
+  end
 
-    self.cycle_chain.insert(cycle_chain.index(position) + 1, *cycle)
-    self.dominos -= cycle
+  def cycle?(position, cycle)
+    first_cycle = (@cycle_chain.size == 1)
+    return false if cycle.empty?
+    return false if first_cycle && position.left != cycle.last.right
+    return false if !first_cycle && position.right != cycle.last.right
 
-    cycle_chain.each do |d|
-      find_all_sub_cycles(d)
-    end
+    true
   end
 
   def next_domino(position, cycle)
