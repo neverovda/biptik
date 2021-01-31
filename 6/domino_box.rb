@@ -42,17 +42,17 @@ class DominoBox
     sequence
   end
 
-  def cycle?(position, cycle)
+  def cycle?(position, sequence)
     first_cycle = (@cycle_chain.size == 1)
-    return false if cycle.empty?
-    return false if first_cycle && position.left != cycle.last.right
-    return false if !first_cycle && position.right != cycle.last.right
+    return false if sequence.empty?
+    return false if first_cycle && position.left != sequence.last.right
+    return false if !first_cycle && position.right != sequence.last.right
 
     true
   end
 
   def next_domino(position, cycle)
-    (dominos - cycle).find { |d| position.right == d.left || position.right == d.rotate.left }
+    (dominos - cycle).find { |d| position.right == d.left || position.right == d.rotate!.left }
   end
 
   def prepare(domino_arrs)

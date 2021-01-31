@@ -7,7 +7,7 @@ class DominoBox
       @right = right
     end
 
-    def rotate
+    def rotate!
       @left, @right = @right, @left
       self
     end
